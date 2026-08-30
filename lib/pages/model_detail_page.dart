@@ -308,17 +308,6 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
       appBar: AppBar(
         title: Text(account.name, overflow: TextOverflow.ellipsis),
         actions: [
-          IconButton(
-            tooltip: '刷新',
-            icon: account.isLoading
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.refresh),
-            onPressed: refresh,
-          ),
           PopupMenuButton<String>(
             tooltip: '更多操作',
             onSelected: (value) {
@@ -350,20 +339,24 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-        children: [
-          balanceOverviewCard(Theme.of(context).colorScheme),
-          if (account.hasUsageApi) ...[
-            usageOverviewCard(Theme.of(context).colorScheme),
-            if (usageReport != null && usageReport!.models.isNotEmpty)
-              modelShareCard(Theme.of(context).colorScheme),
+      body: RefreshIndicator(
+        color: Theme.of(context).colorScheme.primary,
+        onRefresh: refresh,
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+          children: [
+            balanceOverviewCard(Theme.of(context).colorScheme),
+            if (account.hasUsageApi) ...[
+              usageOverviewCard(Theme.of(context).colorScheme),
+              if (usageReport != null && usageReport!.models.isNotEmpty)
+                modelShareCard(Theme.of(context).colorScheme),
+            ],
+            trendCard(Theme.of(context).colorScheme),
+            apiInfoCard(Theme.of(context).colorScheme),
+            if (widget.settings.developerMode && account.rawResponse != null)
+              rawResponseCard(Theme.of(context).colorScheme),
           ],
-          trendCard(Theme.of(context).colorScheme),
-          apiInfoCard(Theme.of(context).colorScheme),
-          if (widget.settings.developerMode && account.rawResponse != null)
-            rawResponseCard(Theme.of(context).colorScheme),
-        ],
+        ),
       ),
     );
   }
@@ -426,18 +419,22 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
           child: Row(
             children: [
               Text(
-                'Key: ${account.maskedKey}',
+                'Key  ${account.maskedKey}',
                 style: TextStyle(
-                    fontSize: 12,
-                    fontFamily: 'monospace',
-                    color: scheme.onSurfaceVariant),
+                  fontSize: 12,
+                  fontFamily: 'monospace',
+                  color: scheme.onSurfaceVariant,
+                ),
               ),
               const Spacer(),
               InkResponse(
                 onTap: () => copyText(account.apiKey, 'API Key 已复制'),
                 radius: 16,
-                child: Icon(Icons.copy,
-                    size: 15, color: scheme.onSurfaceVariant),
+                child: Icon(
+                  Icons.copy,
+                  size: 15,
+                  color: scheme.onSurfaceVariant,
+                ),
               ),
             ],
           ),

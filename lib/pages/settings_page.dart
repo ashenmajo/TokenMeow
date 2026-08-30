@@ -50,12 +50,63 @@ class _SettingsPageState extends State<SettingsPage> {
     final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('设置'),
-      ),
+      appBar: AppBar(title: const Text('设置')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
         children: [
+          // ─────────── 外观 ───────────
+          sectionTitle('外观'),
+          sectionCard([
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              child: Text(
+                '主题色',
+                style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+              child: Wrap(
+                spacing: 10,
+                children: [
+                  for (final entry in seedColors.entries)
+                    colorDot(entry.key, entry.value),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+              child: Text(
+                '深色模式',
+                style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              child: SegmentedButton<String>(
+                segments: const [
+                  ButtonSegment(
+                    value: 'system',
+                    label: Text('跟随系统'),
+                    icon: Icon(Icons.brightness_auto_outlined),
+                  ),
+                  ButtonSegment(
+                    value: 'light',
+                    label: Text('浅色'),
+                    icon: Icon(Icons.light_mode_outlined),
+                  ),
+                  ButtonSegment(
+                    value: 'dark',
+                    label: Text('深色'),
+                    icon: Icon(Icons.dark_mode_outlined),
+                  ),
+                ],
+                selected: {current.themeModeName},
+                onSelectionChanged: (selection) =>
+                    apply(current.copyWith(themeModeName: selection.first)),
+              ),
+            ),
+          ]),
           // ─────────── 刷新 ───────────
           sectionTitle('刷新'),
           sectionCard([
@@ -170,8 +221,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             ListTile(
               leading: Icon(Icons.delete_forever_outlined, color: scheme.error),
-              title: Text('清空全部数据',
-                  style: TextStyle(color: scheme.error)),
+              title: Text('清空全部数据', style: TextStyle(color: scheme.error)),
               onTap: confirmClearAll,
             ),
           ]),
@@ -183,56 +233,8 @@ class _SettingsPageState extends State<SettingsPage> {
               title: const Text('开发者模式'),
               subtitle: const Text('在模型详情页显示接口原始返回（JSON）'),
               value: current.developerMode,
-              onChanged: (value) => apply(current.copyWith(developerMode: value)),
-            ),
-          ]),
-
-          // ─────────── 外观 ───────────
-          sectionTitle('外观'),
-          sectionCard([
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-              child: Text('主题色',
-                  style: TextStyle(
-                      fontSize: 12, color: scheme.onSurfaceVariant)),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-              child: Wrap(
-                spacing: 10,
-                children: [
-                  for (final entry in seedColors.entries)
-                    colorDot(entry.key, entry.value),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-              child: Text('深色模式',
-                  style: TextStyle(
-                      fontSize: 12, color: scheme.onSurfaceVariant)),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-              child: SegmentedButton<String>(
-                segments: const [
-                  ButtonSegment(
-                      value: 'system',
-                      label: Text('跟随系统'),
-                      icon: Icon(Icons.brightness_auto_outlined)),
-                  ButtonSegment(
-                      value: 'light',
-                      label: Text('浅色'),
-                      icon: Icon(Icons.light_mode_outlined)),
-                  ButtonSegment(
-                      value: 'dark',
-                      label: Text('深色'),
-                      icon: Icon(Icons.dark_mode_outlined)),
-                ],
-                selected: {current.themeModeName},
-                onSelectionChanged: (selection) =>
-                    apply(current.copyWith(themeModeName: selection.first)),
-              ),
+              onChanged: (value) =>
+                  apply(current.copyWith(developerMode: value)),
             ),
           ]),
 
@@ -256,8 +258,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget sectionTitle(String text) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(4, 20, 4, 8),
-      child: Text(text,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+      ),
     );
   }
 

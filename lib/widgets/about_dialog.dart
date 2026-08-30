@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// “关于”弹窗：在屏幕中间展示软件的开发信息
 class AboutAppDialog extends StatelessWidget {
@@ -41,7 +42,11 @@ class AboutAppDialog extends StatelessWidget {
             infoRow('技术栈', 'Flutter / Material 3'),
             infoRow('支持平台', 'Windows / Android'),
             infoRow('开源协议', 'MIT'),
-            infoRow('开源地址', 'https://github.com/ashenmajo/TokenMeow'),
+            infoRow(
+              '开源地址',
+              'https://github.com/ashenmajo/TokenMeow',
+              islink: true,
+            ),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () => Navigator.pop(context),
@@ -53,7 +58,7 @@ class AboutAppDialog extends StatelessWidget {
     );
   }
 
-  Widget infoRow(String label, String value) {
+  Widget infoRow(String label, String value, {bool islink = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -65,8 +70,32 @@ class AboutAppDialog extends StatelessWidget {
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
-          Expanded(child: Text(value, style: const TextStyle(fontSize: 13))),
+          Expanded(
+            child: islink
+                ? linkText(value)
+                : Text(value, style: const TextStyle(fontSize: 13)),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget linkText(String url) {
+    return GestureDetector(
+      onTap: () async {
+        final Uri uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri);
+        }
+      },
+      child: Text(
+        url,
+        style: const TextStyle(
+          fontSize: 13,
+          color: Colors.blue,
+          decoration: TextDecoration.underline,
+          decorationColor: Colors.blue,
+        ),
       ),
     );
   }

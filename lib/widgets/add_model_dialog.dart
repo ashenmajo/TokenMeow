@@ -48,29 +48,38 @@ class _AddModelDialogState extends State<AddModelDialog> {
     final preset = presetById(providerId);
     // 名称默认用提供商短名，用户可随时改（比如“DeepSeek 主号”）
     nameController = TextEditingController(
-        text: existing?.name ?? preset.shortLabel);
-    urlController =
-        TextEditingController(text: existing?.balanceUrl ?? preset.balanceUrl);
+      text: existing?.name ?? preset.shortLabel,
+    );
+    urlController = TextEditingController(
+      text: existing?.balanceUrl ?? preset.balanceUrl,
+    );
     keyController = TextEditingController(text: existing?.apiKey ?? '');
-    unitController =
-        TextEditingController(text: existing?.unit ?? preset.unit);
+    unitController = TextEditingController(text: existing?.unit ?? preset.unit);
     // 路径类字段：模型上保存过的优先，否则用预设默认值
     pathRemainingController = TextEditingController(
-        text: existing?.pathRemaining ?? preset.pathRemaining);
-    pathUsedController =
-        TextEditingController(text: existing?.pathUsed ?? preset.pathUsed);
-    pathTotalController =
-        TextEditingController(text: existing?.pathTotal ?? preset.pathTotal);
-    pathCurrencyController =
-        TextEditingController(text: existing?.pathCurrency ?? preset.pathCurrency);
-    pathDetailsController =
-        TextEditingController(text: existing?.pathDetails ?? preset.pathDetails);
-    usageAmountUrlController =
-        TextEditingController(text: existing?.usageAmountUrl ?? preset.usageAmountUrl);
-    usageCostUrlController =
-        TextEditingController(text: existing?.usageCostUrl ?? preset.usageCostUrl);
-    keyCheckUrlController =
-        TextEditingController(text: existing?.keyCheckUrl ?? preset.keyCheckUrl);
+      text: existing?.pathRemaining ?? preset.pathRemaining,
+    );
+    pathUsedController = TextEditingController(
+      text: existing?.pathUsed ?? preset.pathUsed,
+    );
+    pathTotalController = TextEditingController(
+      text: existing?.pathTotal ?? preset.pathTotal,
+    );
+    pathCurrencyController = TextEditingController(
+      text: existing?.pathCurrency ?? preset.pathCurrency,
+    );
+    pathDetailsController = TextEditingController(
+      text: existing?.pathDetails ?? preset.pathDetails,
+    );
+    usageAmountUrlController = TextEditingController(
+      text: existing?.usageAmountUrl ?? preset.usageAmountUrl,
+    );
+    usageCostUrlController = TextEditingController(
+      text: existing?.usageCostUrl ?? preset.usageCostUrl,
+    );
+    keyCheckUrlController = TextEditingController(
+      text: existing?.keyCheckUrl ?? preset.keyCheckUrl,
+    );
   }
 
   @override
@@ -122,12 +131,15 @@ class _AddModelDialogState extends State<AddModelDialog> {
 
     final isCustom = providerId == 'custom';
     final account = ModelAccount(
-      id: widget.existing?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
+      id:
+          widget.existing?.id ??
+          DateTime.now().microsecondsSinceEpoch.toString(),
       name: nameController.text.trim(),
       providerId: providerId,
       // 预设提供商的地址直接用预设的，只有自定义才用输入框里的
-      balanceUrl:
-          isCustom ? urlController.text.trim() : presetById(providerId).balanceUrl,
+      balanceUrl: isCustom
+          ? urlController.text.trim()
+          : presetById(providerId).balanceUrl,
       apiKey: keyController.text.trim(),
       unit: unitController.text.trim(),
       // JSON 路径只有自定义才保存（预设的走预设默认值，改了也能对上号）
@@ -169,8 +181,7 @@ class _AddModelDialogState extends State<AddModelDialog> {
                   validator: (value) =>
                       value == null || value.trim().isEmpty ? '请填写账号名称' : null,
                   textInputAction: TextInputAction.next,
-                  decoration:
-                      const InputDecoration(hintText: '例如：DeepSeek 主号'),
+                  decoration: const InputDecoration(hintText: '例如：DeepSeek 主号'),
                 ),
                 buildLabel('提供商'),
                 DropdownButtonFormField<String>(
@@ -183,7 +194,9 @@ class _AddModelDialogState extends State<AddModelDialog> {
                     filled: true,
                     fillColor: scheme.surfaceContainerHighest.withAlpha(90),
                     contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 12),
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16),
                       borderSide: BorderSide.none,
@@ -215,7 +228,10 @@ class _AddModelDialogState extends State<AddModelDialog> {
                 const SizedBox(height: 4),
                 Text(
                   preset.hint,
-                  style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: scheme.onSurfaceVariant,
+                  ),
                 ),
                 buildLabel('余额接口地址'),
                 if (isCustom) ...[
@@ -225,25 +241,28 @@ class _AddModelDialogState extends State<AddModelDialog> {
                     keyboardType: TextInputType.url,
                     textInputAction: TextInputAction.next,
                     validator: validateUrl,
-                    decoration:
-                        const InputDecoration(hintText: 'https://…'),
+                    decoration: const InputDecoration(hintText: 'https://…'),
                   ),
                 ] else if (preset.balanceUrl.isEmpty) ...[
                   // 无余额接口的提供商（OpenAI / Claude / Gemini 等）
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.info_outline,
-                          size: 16, color: scheme.onSurfaceVariant),
+                      Icon(
+                        Icons.info_outline,
+                        size: 16,
+                        color: scheme.onSurfaceVariant,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           '该提供商不提供余额查询接口：账号用于校验 Key（可用模型数），'
                           '余额可在详情页手动记录。',
                           style: TextStyle(
-                              fontSize: 13,
-                              color: scheme.onSurfaceVariant,
-                              height: 1.5),
+                            fontSize: 13,
+                            color: scheme.onSurfaceVariant,
+                            height: 1.5,
+                          ),
                         ),
                       ),
                     ],
@@ -258,12 +277,15 @@ class _AddModelDialogState extends State<AddModelDialog> {
                         child: Text(
                           preset.balanceUrl,
                           style: TextStyle(
-                              fontSize: 13, color: scheme.onSurfaceVariant),
+                            fontSize: 13,
+                            color: scheme.onSurfaceVariant,
+                          ),
                         ),
                       ),
-                      Text('自动填充',
-                          style: TextStyle(
-                              fontSize: 12, color: scheme.primary)),
+                      Text(
+                        '自动填充',
+                        style: TextStyle(fontSize: 12, color: scheme.primary),
+                      ),
                     ],
                   ),
                 ],
@@ -271,14 +293,17 @@ class _AddModelDialogState extends State<AddModelDialog> {
                 TextFormField(
                   controller: keyController,
                   obscureText: obscureKey,
-                  validator: (value) =>
-                      value == null || value.trim().isEmpty ? '请填写 API Key' : null,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? '请填写 API Key'
+                      : null,
                   decoration: InputDecoration(
                     hintText: 'sk-…',
                     suffixIcon: IconButton(
-                      icon: Icon(obscureKey
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined),
+                      icon: Icon(
+                        obscureKey
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                      ),
                       onPressed: () => setState(() => obscureKey = !obscureKey),
                     ),
                   ),
@@ -296,25 +321,27 @@ class _AddModelDialogState extends State<AddModelDialog> {
                   TextFormField(
                     controller: pathRemainingController,
                     decoration: const InputDecoration(
-                        hintText: '例如：data.balance（多个候选用英文逗号分隔）'),
+                      hintText: '例如：data.balance（多个候选用英文逗号分隔）',
+                    ),
                   ),
                   buildLabel('已使用的 JSON 路径（可选）'),
                   TextFormField(
                     controller: pathUsedController,
-                    decoration:
-                        const InputDecoration(hintText: '例如：data.used'),
+                    decoration: const InputDecoration(hintText: '例如：data.used'),
                   ),
                   buildLabel('总额度的 JSON 路径（可选）'),
                   TextFormField(
                     controller: pathTotalController,
-                    decoration:
-                        const InputDecoration(hintText: '例如：data.total'),
+                    decoration: const InputDecoration(
+                      hintText: '例如：data.total',
+                    ),
                   ),
                   buildLabel('货币代码的 JSON 路径（可选）'),
                   TextFormField(
                     controller: pathCurrencyController,
                     decoration: const InputDecoration(
-                        hintText: '例如：data.currency，取到 CNY 会自动显示 ¥'),
+                      hintText: '例如：data.currency，取到 CNY 会自动显示 ¥',
+                    ),
                   ),
                   buildLabel('明细字段（可选，每行一条：显示名=JSON路径）'),
                   TextFormField(
@@ -350,23 +377,23 @@ class _AddModelDialogState extends State<AddModelDialog> {
                   ),
                   Text(
                     '用量接口返回结构需与 DeepSeek 平台一致；网页 Token 在详情页的“本月用量”里填写。',
-                    style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: scheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ],
             ),
           ),
-          ),
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: const Text('取消'),
         ),
-        FilledButton(
-          onPressed: save,
-          child: const Text('保存'),
-        ),
+        FilledButton(onPressed: save, child: const Text('保存')),
       ],
     );
   }

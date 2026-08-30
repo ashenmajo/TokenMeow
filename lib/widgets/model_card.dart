@@ -62,7 +62,7 @@ class ModelCard extends StatelessWidget {
                         Text(
                           account.maskedKey.isEmpty
                               ? preset.label
-                              : '${preset.label} · ${account.maskedKey}',
+                              : 'Key  ${account.maskedKey}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

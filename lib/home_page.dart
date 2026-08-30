@@ -362,7 +362,6 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-
             const SizedBox(height: 20),
             Text('还没有添加账号', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 8),
@@ -430,6 +429,9 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                          ),
                         ],
                       ),
                     ),

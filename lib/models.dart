@@ -122,8 +122,8 @@ class ModelAccount {
     account.usageMonthTokens = (json['usageMonthTokens'] as num?)?.toDouble();
     account.usageMonthCost = (json['usageMonthCost'] as num?)?.toDouble();
     account.usageMonthLabel = json['usageMonthLabel'] as String?;
-    account.usageMonthCacheHitRate =
-        (json['usageMonthCacheHitRate'] as num?)?.toDouble();
+    account.usageMonthCacheHitRate = (json['usageMonthCacheHitRate'] as num?)
+        ?.toDouble();
     final historyList = json['history'];
     if (historyList is List) {
       for (final item in historyList) {
@@ -168,12 +168,14 @@ class ModelAccount {
 
   /// 追加一条历史记录，最多保留 300 条，防止文件越来越大
   void appendHistory() {
-    history.add(HistoryPoint(
-      time: DateTime.now(),
-      remaining: remaining,
-      used: used,
-      total: total,
-    ));
+    history.add(
+      HistoryPoint(
+        time: DateTime.now(),
+        remaining: remaining,
+        used: used,
+        total: total,
+      ),
+    );
     if (history.length > 300) {
       history.removeRange(0, history.length - 300);
     }
@@ -265,7 +267,15 @@ class ModelAccount {
 }
 
 /// 账号的余额状态
-enum AccountStatus { normal, low, exhausted, expired, keyValid, keyInvalid, error }
+enum AccountStatus {
+  normal,
+  low,
+  exhausted,
+  expired,
+  keyValid,
+  keyInvalid,
+  error,
+}
 
 /// 一条历史查询记录，画趋势图用
 class HistoryPoint {
@@ -274,12 +284,7 @@ class HistoryPoint {
   double? used;
   double? total;
 
-  HistoryPoint({
-    required this.time,
-    this.remaining,
-    this.used,
-    this.total,
-  });
+  HistoryPoint({required this.time, this.remaining, this.used, this.total});
 
   Map<String, dynamic> toJson() {
     return {
@@ -351,11 +356,13 @@ const List<ProviderPreset> providerPresets = [
     mark: 'DS',
     shortLabel: 'DeepSeek',
     balanceUrl: 'https://api.deepseek.com/user/balance',
-    hint: '官方文档接口。返回总额/赠送/充值余额，没有“已用”，因此不显示进度条。'
+    hint:
+        '官方文档接口。返回总额/赠送/充值余额，没有“已用”，因此不显示进度条。'
         '支持用量查询：在详情页填入网页 Token 即可。',
     pathRemaining: 'balance_infos.0.total_balance',
     pathCurrency: 'balance_infos.0.currency',
-    pathDetails: '赠送额度=balance_infos.0.granted_balance\n'
+    pathDetails:
+        '赠送额度=balance_infos.0.granted_balance\n'
         '充值余额=balance_infos.0.topped_up_balance',
     usageAmountUrl:
         'https://platform.deepseek.com/api/v0/usage/amount?month={month}&year={year}',
@@ -430,7 +437,8 @@ const List<ProviderPreset> providerPresets = [
     brandColor: Color(0xFF6B7280),
     mark: '自',
     balanceUrl: '',
-    hint: '填写完整的余额接口地址，以及从返回 JSON 取值的路径，例如 data.balance。'
+    hint:
+        '填写完整的余额接口地址，以及从返回 JSON 取值的路径，例如 data.balance。'
         '路径可以填多个候选，用英文逗号分隔。',
   ),
 ];
@@ -555,7 +563,7 @@ class AppSettings {
       proxyModeName: 'none',
       proxyAddress: '',
       developerMode: false,
-      seedColorName: 'slate', // 默认 Shizuku 风格石板蓝
+      seedColorName: 'indigo', // 设置默认主题
       themeModeName: 'system',
     );
   }
@@ -605,16 +613,15 @@ class AppSettings {
   factory AppSettings.fromJson(Map<String, dynamic> json) {
     final defaults = AppSettings.defaults();
     return AppSettings(
-      autoRefreshOnStart: json['autoRefreshOnStart'] as bool? ?? defaults.autoRefreshOnStart,
-      autoRefreshMinutes: json['autoRefreshMinutes'] as int? ?? defaults.autoRefreshMinutes,
+      autoRefreshOnStart:
+          json['autoRefreshOnStart'] as bool? ?? defaults.autoRefreshOnStart,
+      autoRefreshMinutes:
+          json['autoRefreshMinutes'] as int? ?? defaults.autoRefreshMinutes,
       timeoutSeconds: json['timeoutSeconds'] as int? ?? defaults.timeoutSeconds,
       proxyModeName: json['proxyModeName'] as String? ?? defaults.proxyModeName,
       proxyAddress: json['proxyAddress'] as String? ?? defaults.proxyAddress,
       developerMode: json['developerMode'] as bool? ?? defaults.developerMode,
-      seedColorName: const {'indigo': 'slate', 'purple': 'slate', 'pink': 'slate'}[
-              json['seedColorName'] as String?] ??
-          json['seedColorName'] as String? ??
-          defaults.seedColorName,
+      seedColorName: json['seedColorName'] as String? ?? defaults.seedColorName,
       themeModeName: json['themeModeName'] as String? ?? defaults.themeModeName,
     );
   }
@@ -641,9 +648,9 @@ class AppData {
 
 /// 可选的主题色，第一项 Indigo 是默认色
 const Map<String, Color> seedColors = {
-  'slate': Color(0xFF48607C), // Shizuku 风格的石板蓝（默认）
   'indigo': Color(0xFF3F51B5),
-  'blue': Color(0xFF1565C0),
+  'slate': Color(0xFF48607C),
+  'Purple': Color(0xFF9C27B0),
   'teal': Color(0xFF00695C),
 };
 

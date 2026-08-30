@@ -1,27 +1,25 @@
 # TokenMeow 🐾
 
-一个可爱的 **AI 额度管家**：把各家的 API 账号添加进来，集中查看剩余额度、用量明细和用量趋势。
+一个**AI 额度管家**：把各家的 API 账号添加进来，集中查看剩余额度、用量明细和用量趋势。
 
 > **术语说明**：应用里添加的一条 = 一个提供商的 API 账号（一个 Key）。一个账号下面可以有多个模型，
 > 详情页的“各模型用量占比”就是按模型统计的。所以名称可以随意起（默认预填提供商名），比如“DeepSeek 主号”。
 
-- **设计规范**：Material 3（Expressive 风格的圆角卡片与 FAB），默认 Shizuku 风格的石板蓝主题（白背景 + 浅主题色卡片），另有靛蓝等 6 种主题色可选
-- **支持平台**：Windows / Android
+- **设计规范**：Material 3（Expressive 风格的圆角卡片与 FAB），默认靛蓝主题（白背景 + 浅主题色卡片），另有靛蓝等 3种主题色可选
+- **支持平台**：Android
 - **技术栈**：Flutter（不依赖任何第三方插件，只有 `http` 一个纯 Dart 库，图表都是手绘的）
-- **字体**：捆绑开源中文思源黑体（Noto Sans SC，SIL OFL 1.1，可变字体单文件覆盖 100–900 全字重），Windows/Android 中文渲染一致，不再依赖系统字体
+- **注意**：目前仅适配Android,未来会对Windows进行适配
 
 ## 运行
 
 ```bash
 flutter pub get
-flutter run -d windows   # Windows
 flutter run -d <设备id>  # Android（flutter devices 查看设备）
 ```
 
 打包发布：
 
 ```bash
-flutter build windows        # 生成 Windows exe
 flutter build apk --release  # 生成 Android APK（build/app/outputs/flutter-apk/）
 ```
 
@@ -109,7 +107,6 @@ OpenRouter 等海外接口时，在 **设置 → API 网络** 里选择“手动
 
 所有数据（模型列表、设置、查询历史）保存在一个 JSON 文件里，明文可查：
 
-- Windows：`%APPDATA%\TokenMeow\tokenmeow_data.json`
 - Android：应用私有目录下的 `tokenmeow_data.json`
 
 > ⚠️ API Key 是明文保存的，请像保管密码一样保管这个文件。
@@ -136,18 +133,4 @@ lib/
     ├── usage_bar_chart.dart   # 每日用量柱状图
     ├── add_model_dialog.dart  # 添加/编辑模型弹窗
     └── about_dialog.dart      # 关于弹窗
-```
-
-## 为什么不用 shared_preferences / fl_chart？
-
-- **shared_preferences** 等插件在 Windows 上构建需要系统开启“开发者模式”（符号链接权限）。
-  为了让 Windows 端开箱即用，本项目**不使用任何插件**：本地存储用 `dart:io` 读写 JSON 文件，
-  Android 的应用私有目录由 `MainActivity.kt` 十几行代码通过 MethodChannel 提供。
-- **fl_chart** 是纯 Dart 包没有这个问题，但自己用 `CustomPainter` 画柱状/折线图不到两百行，
-  不引依赖、样式完全可控，代码也更好懂。
-
-## 测试
-
-```bash
-flutter test    # 数字格式化、JSON 路径取值、比例计算、序列化等单元测试
 ```
