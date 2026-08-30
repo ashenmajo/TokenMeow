@@ -363,17 +363,22 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
 
   /// 圆角卡片容器
   Widget card(List<Widget> children) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        elevation: 0,
         borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
+        child: InkWell(
+          onTap: () {},
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: children,
+            ),
+          ),
+        ),
       ),
     );
   }
