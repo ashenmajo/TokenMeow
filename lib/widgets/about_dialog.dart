@@ -40,7 +40,7 @@ class AboutAppDialog extends StatelessWidget {
             Divider(height: 28, color: scheme.outlineVariant),
             infoRow('开发者', 'AshenMajo'),
             infoRow('技术栈', 'Flutter / Material 3'),
-            infoRow('支持平台', 'Windows / Android'),
+            infoRow('支持平台', 'Android'),
             infoRow('开源协议', 'MIT'),
             infoRow(
               '开源地址',

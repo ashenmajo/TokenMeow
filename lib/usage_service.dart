@@ -7,21 +7,6 @@ import 'api_service.dart';
 import 'models.dart';
 import 'utils.dart';
 
-/// 用量查询服务（一期：手动粘贴网页 Token）。
-///
-/// DeepSeek 官方 API 只有余额接口，没有用量统计接口。用量数据来自平台网页版
-/// 的内部接口（参考社区逆向分析），鉴权用的是“网页登录 Token”而不是 API Key：
-///   1. 浏览器登录 platform.deepseek.com
-///   2. F12 控制台执行 JSON.parse(localStorage.userToken).value
-///   3. 把得到的字符串粘贴进应用（详情页 → 本月用量 → 填入 Token）
-///
-/// 网页 Token 短期有效，失效后重复上面的步骤即可。
-/// 这里的取 Token 入口刻意收拢在 buildUsageHeaders() 一个函数里，
-/// 将来升级“应用内 WebView 自动抓取”时只需要替换这一处。
-///
-/// ⚠️ 内部接口没有官方 SLA，结构可能变化，所以解析全部走防御式：
-/// 取不到的字段一律置空/为零，绝不抛异常（Token 失效除外）。
-
 /// 模拟浏览器的请求头：内部接口会校验这些，不带会被拒
 const String usageBrowserUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '

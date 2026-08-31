@@ -39,8 +39,10 @@ http.Client buildHttpClient(AppSettings settings) {
     httpClient.findProxy = HttpClient.findProxyFromEnvironment;
   } else if (settings.proxyModeName == 'manual') {
     // 手动代理：地址形如 127.0.0.1:7890 或 http://127.0.0.1:7890
-    final address =
-        settings.proxyAddress.trim().replaceFirst(RegExp(r'^https?://'), '');
+    final address = settings.proxyAddress.trim().replaceFirst(
+      RegExp(r'^https?://'),
+      '',
+    );
     if (address.isNotEmpty) {
       httpClient.findProxy = (uri) => 'PROXY $address';
     }
@@ -108,13 +110,21 @@ Future<BalanceResult> fetchBalance(
   // 路径支持多个候选（英文逗号分隔），按顺序尝试。
   final preset = presetById(account.providerId);
   final remaining = toDouble(
-      pickFirstByPaths(json, joinPaths(account.pathRemaining, preset.pathRemaining)));
+    pickFirstByPaths(
+      json,
+      joinPaths(account.pathRemaining, preset.pathRemaining),
+    ),
+  );
   final used = toDouble(
-      pickFirstByPaths(json, joinPaths(account.pathUsed, preset.pathUsed)));
+    pickFirstByPaths(json, joinPaths(account.pathUsed, preset.pathUsed)),
+  );
   final total = toDouble(
-      pickFirstByPaths(json, joinPaths(account.pathTotal, preset.pathTotal)));
+    pickFirstByPaths(json, joinPaths(account.pathTotal, preset.pathTotal)),
+  );
   final currency = pickFirstByPaths(
-      json, joinPaths(account.pathCurrency, preset.pathCurrency));
+    json,
+    joinPaths(account.pathCurrency, preset.pathCurrency),
+  );
 
   if (remaining == null && used == null && total == null) {
     throw Exception('在返回的 JSON 里找不到额度数据，请检查 JSON 路径是否填对');
@@ -137,8 +147,10 @@ Future<BalanceResult> fetchBalance(
   });
 
   // 可用标志（DeepSeek 返回 is_available，false 表示账号已过期/停用）
-  final availableFlag =
-      pickFirstByPaths(json, 'is_available,data.is_available');
+  final availableFlag = pickFirstByPaths(
+    json,
+    'is_available,data.is_available',
+  );
 
   return BalanceResult(
     remaining: actualRemaining,
@@ -170,10 +182,7 @@ class KeyCheckResult {
 /// 大多数走 Bearer；Anthropic 用 x-api-key + 版本号；Gemini 用 x-goog-api-key。
 Map<String, String> authHeadersFor(String authStyle, String apiKey) {
   if (authStyle == 'anthropic') {
-    return {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    };
+    return {'x-api-key': apiKey, 'anthropic-version': '2023-06-01'};
   }
   if (authStyle == 'gemini') {
     return {'x-goog-api-key': apiKey};
@@ -198,7 +207,9 @@ Future<KeyCheckResult> validateApiKey(
           Uri.parse(url),
           headers: {
             ...authHeadersFor(
-                presetById(account.providerId).authStyle, account.apiKey.trim()),
+              presetById(account.providerId).authStyle,
+              account.apiKey.trim(),
+            ),
             'Accept': 'application/json',
           },
         )

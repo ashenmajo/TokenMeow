@@ -35,6 +35,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Timer? autoRefreshTimer; // 定时自动刷新用的计时器
+  String searchQuery = '';
+  List<ModelAccount> get filteredModels {
+    final query = searchQuery.trim().toLowerCase();
+    if (query.isEmpty) return widget.models;
+
+    return widget.models.where((account) {
+      final preset = presetById(account.providerId);
+
+      return [
+        account.name,
+        account.providerId,
+        preset.label,
+        preset.shortLabel,
+        account.maskedKey,
+        account.statusLabel,
+      ].any((value) => value.toLowerCase().contains(query));
+    }).toList();
+  }
 
   @override
   void initState() {
@@ -304,10 +322,31 @@ class _HomePageState extends State<HomePage> {
   PreferredSizeWidget buildAppBar(BuildContext context) {
     return AppBar(
       centerTitle: false,
-      title: const Text(
-        'TokenMeow',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      title: Row(
+        children: [
+          const Text(
+            'TokenMeow',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          const SizedBox(width: 30),
+          Expanded(
+            child: SizedBox(
+              height: 40,
+              child: SearchBar(
+                leading: Icon(Icons.search),
+                hintText: '搜索',
+                elevation: WidgetStateProperty.all(0),
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value;
+                  });
+                },
+              ),
+            ),
+          ),
+        ],
       ),
+
       actions: [
         PopupMenuButton<String>(
           tooltip: '更多选项',
@@ -346,11 +385,14 @@ class _HomePageState extends State<HomePage> {
     if (widget.models.isEmpty) {
       return buildEmptyView();
     }
+    if (filteredModels.isEmpty) {
+      return const Center(child: Text('没有匹配的账号'));
+    }
     // 手机上可以下拉刷新
     return RefreshIndicator(
       color: Theme.of(context).colorScheme.primary,
       onRefresh: refreshAll,
-      child: buildModelGrid(),
+      child: buildModelGrid(filteredModels),
     );
   }
 
@@ -378,7 +420,7 @@ class _HomePageState extends State<HomePage> {
 
   /// 模型卡片列表（自适应高度）：按可用宽度算出列数（1~3 列），
   /// 每行卡片等高（取该行最高的那张），屏幕特别宽时整体限宽居中。
-  Widget buildModelGrid() {
+  Widget buildModelGrid(List<ModelAccount> models) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final contentWidth = constraints.maxWidth > 1280
@@ -391,7 +433,7 @@ class _HomePageState extends State<HomePage> {
 
         // 按列数把账号切行
         final rows = <List<ModelAccount>>[];
-        for (final account in widget.models) {
+        for (final account in models) {
           if (rows.isEmpty || rows.last.length == columns) {
             rows.add([account]); // 开新行
           } else {

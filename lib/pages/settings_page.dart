@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 import '../models.dart';
 import '../storage.dart';
 
-/// 独立的设置页面（不再是弹窗）。
-/// 每一项改动后立即生效并保存，所以没有“保存”按钮。
 class SettingsPage extends StatefulWidget {
   final AppSettings settings;
   final List<ModelAccount> models; // 当前模型列表（导出数据用）
@@ -227,23 +225,23 @@ class _SettingsPageState extends State<SettingsPage> {
           ]),
 
           // ─────────── 开发者 ───────────
-          sectionTitle('开发者'),
-          sectionCard([
-            SwitchListTile(
-              title: const Text('开发者模式'),
-              subtitle: const Text('在模型详情页显示接口原始返回（JSON）'),
-              value: current.developerMode,
-              onChanged: (value) =>
-                  apply(current.copyWith(developerMode: value)),
-            ),
-          ]),
+          // sectionTitle('开发者'),
+          // sectionCard([
+          //   SwitchListTile(
+          //     title: const Text('开发者模式'),
+          //     subtitle: const Text('在模型详情页显示接口原始返回（JSON）'),
+          //     value: current.developerMode,
+          //     onChanged: (value) =>
+          //         apply(current.copyWith(developerMode: value)),
+          //   ),
+          // ]),
 
-          // ─────────── 数据文件位置 ───────────
-          const SizedBox(height: 8),
-          Text(
-            '数据文件：$dataPath',
-            style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
-          ),
+          // 数据文件位置
+          // const SizedBox(height: 8),
+          // Text(
+          //   '数据文件：$dataPath',
+          //   style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),
+          // ),
         ],
       ),
     );

@@ -6,12 +6,13 @@ import 'package:flutter/services.dart' show MethodChannel;
 import 'models.dart';
 
 /// 应用的所有本地数据（模型列表 + 设置）都存在一个 JSON 文件里：
-/// - Windows：%APPDATA%\TokenMeow\tokenmeow_data.json
 /// - Android：应用私有目录（目录路径由 MainActivity 通过 MethodChannel 告诉我们）
 ///
 /// 特意不用 shared_preferences 这类插件，是为了让 Windows 端构建不依赖
 /// 系统的“开发者模式”（Flutter 插件在 Windows 上构建需要符号链接权限）。
-const MethodChannel _platformChannel = MethodChannel('dev.meowworks.tokenmeow/platform');
+const MethodChannel _platformChannel = MethodChannel(
+  'dev.meowworks.tokenmeow/platform',
+);
 
 /// 数据文件的完整路径
 Future<String> dataFilePath() async {

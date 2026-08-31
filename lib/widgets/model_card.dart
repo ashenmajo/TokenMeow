@@ -62,7 +62,7 @@ class ModelCard extends StatelessWidget {
                         Text(
                           account.maskedKey.isEmpty
                               ? preset.label
-                              : 'Key  ${account.maskedKey}',
+                              : 'API Key    ${account.maskedKey}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -105,7 +105,7 @@ class ModelCard extends StatelessWidget {
 
               // ── 本月 Token 摘要（查过用量才显示） ──
               buildUsageLine(scheme),
-
+              const Spacer(),
               const SizedBox(height: 10),
               Divider(height: 1, color: scheme.outlineVariant),
               const SizedBox(height: 8),

@@ -12,8 +12,6 @@ import '../widgets/split_progress_bar.dart';
 import '../widgets/trend_chart.dart';
 import '../widgets/usage_bar_chart.dart';
 
-/// 模型详情页。从上到下：余额总览 → 用量概览 → 各模型用量占比 → 用量趋势
-/// → API 信息（默认折叠）→ 原始返回（开发者模式才显示），底部是固定操作栏。
 class ModelDetailPage extends StatefulWidget {
   final ModelAccount account;
   final AppSettings settings;
@@ -353,7 +351,7 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
             ],
             trendCard(Theme.of(context).colorScheme),
             apiInfoCard(Theme.of(context).colorScheme),
-            if (widget.settings.developerMode && account.rawResponse != null)
+            if (account.rawResponse != null)
               rawResponseCard(Theme.of(context).colorScheme),
           ],
         ),
@@ -417,33 +415,49 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
         buildValidateOnlyFooter(scheme)
       else
         buildDetailColumns(scheme),
-      // Key 掩码行：复制按钮就在它右边，一眼知道复制的是什么
-      if (account.maskedKey.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Row(
-            children: [
-              Text(
-                'Key  ${account.maskedKey}',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'monospace',
-                  color: scheme.onSurfaceVariant,
-                ),
-              ),
-              const Spacer(),
-              InkResponse(
-                onTap: () => copyText(account.apiKey, 'API Key 已复制'),
-                radius: 16,
-                child: Icon(
-                  Icons.copy,
-                  size: 15,
-                  color: scheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ),
+      // Key 掩码行
+      // if (account.maskedKey.isNotEmpty)
+      //   Padding(
+      //     padding: const EdgeInsets.only(top: 10),
+      //     child: Row(
+      //       children: [
+      //         Text(
+      //           'Key  ${showApiKey1 ? key : account.maskedKey}',
+      //           style: TextStyle(
+      //             fontSize: 12,
+      //             fontFamily: 'monospace',
+      //             color: scheme.onSurfaceVariant,
+      //           ),
+      //         ),
+      //         const Spacer(),
+      //         InkResponse(
+      //           onTap: () => setState(() => showApiKey1 = !showApiKey1),
+      //           radius: 16,
+      //           child: Padding(
+      //             padding: const EdgeInsets.all(4),
+      //             child: Icon(
+      //               showApiKey1
+      //                   ? Icons.visibility_outlined
+      //                   : Icons.visibility_off_outlined,
+      //               size: 18,
+      //             ),
+      //           ),
+      //         ),
+      //         InkResponse(
+      //           onTap: () => copyText(account.apiKey, 'API Key 已复制'),
+      //           radius: 16,
+      //           child: Padding(
+      //             padding: const EdgeInsets.all(4),
+      //             child: Icon(
+      //               Icons.copy,
+      //               size: 15,
+      //               color: scheme.onSurfaceVariant,
+      //             ),
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
     ]);
   }
 
@@ -1161,8 +1175,8 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
             visualDensity: VisualDensity.compact,
             icon: Icon(
               showApiKey
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
               size: 18,
             ),
             onPressed: () => setState(() => showApiKey = !showApiKey),
@@ -1215,7 +1229,6 @@ class _ModelDetailPageState extends State<ModelDetailPage> {
     );
   }
 
-  /// 折叠卡片：圆角 Material 让点击水花正确显示（并被圆角裁剪），
   /// 展开时把该区块滚动到视口顶部，内容再长也能看全。
   Widget expansionCard({
     required GlobalKey sectionKey,
